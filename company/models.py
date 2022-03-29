@@ -10,5 +10,6 @@ class Companies(models.Model):
     ticker = models.CharField(max_length=10)
     price = models.CharField(max_length=10)
     change = models.CharField(max_length=50)
+    price_to_earn = models.CharField(max_length=50,default='10')
 
     time = models.DateTimeField(default=timezone.now)
