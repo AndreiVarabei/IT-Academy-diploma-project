@@ -1,9 +1,17 @@
 from django.shortcuts import render
 from . import models
 from . import forms
+
+from django.contrib.auth import login
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+
+from django.http import HttpResponse
+
 from bs4 import BeautifulSoup
 import requests
-from django.utils import timezone
+
 
 
 
@@ -31,10 +39,9 @@ def update_companies(request):
     req = requests.get('https://ru.tradingview.com/symbols/DJ-DJA/components/')
     soup = BeautifulSoup(req.text, 'lxml')
     all_companies = soup.find('tbody')
-    all_tr = all_companies.find_all('tr',class_='row-arjDAkRm listRoz')
+    all_tr = all_companies.find_all('tr',class_='row-arjDAkRm listRow')
     for elem in all_tr:
-        name = elem.find(class_='apply-common-tooltip tickerDescription-qN79lDF8').text
-        update_company = models.Companies(instance=name)
+        update_company = models.Companies()
         update_company.name = elem.find(class_='apply-common-tooltip tickerDescription-qN79lDF8').text
         update_company.slug = elem.find(class_='apply-common-tooltip tickerName-qN79lDF8').text
         update_company.ticker = elem.find(class_='apply-common-tooltip tickerName-qN79lDF8').text
@@ -47,6 +54,7 @@ def update_companies(request):
         update_company.price_to_earn = all_numbers[6].text
         update_company.save(force_update=True)
 
+
     return render(request,
                   'companies/all_companies.html',
                   {'companies': companies})
@@ -58,6 +66,27 @@ def all_companies(request):
     return render(request,
                   'companies/all_companies.html',
                   {'companies':companies})
+
+def custom_login(request):
+    if request.method == 'POST':
+        form = forms.LoginForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = authenticate(
+                username=cd['username'],
+                password=cd['password'],
+            )
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponse('user was logged in')
+                else:
+                    return HttpResponse('user account is not activated')
+            else:
+                return HttpResponse('Incorrect User/Password')
+    else:
+        form = forms.LoginForm()
+        return render(request, 'login.html', {'form': form})
 
 
 

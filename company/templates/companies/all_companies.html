@@ -4,6 +4,7 @@
 
 {% block content %}
     <h1>All companies: </h1>
+    <a href="{% url "company:login" %}">Login</a>
     <a href="{% url "company:update_companies" %}">Update</a>
     {% for company in companies %}
 
