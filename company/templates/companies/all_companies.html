@@ -4,14 +4,16 @@
 
 {% block content %}
     <h1>All companies: </h1>
+    <a href="{% url "company:update_companies" %}">Update</a>
     {% for company in companies %}
+
         <h3> {{ company.name }} </h3>
         <p>
-            {{ company.ticker }}
-            {{ company.price }}
-            {{ company.change }}
-            {{ company.price_to_earn }}
-            {{ company.time }}
+            Ticker: {{ company.ticker }}
+            Price: {{ company.price }}
+            Last change: {{ company.change }}
+            P/E: {{ company.price_to_earn }}
+            Last update: {{ company.time }}
         </p>
 
     {% endfor %}

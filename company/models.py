@@ -4,7 +4,7 @@ from django.utils import timezone
 # Create your models here.
 
 class Companies(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200)
 
     ticker = models.CharField(max_length=10)
