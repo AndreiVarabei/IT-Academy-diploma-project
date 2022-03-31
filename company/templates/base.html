@@ -5,7 +5,15 @@
     <title>{% block title %} My default title {% endblock %}</title>
 </head>
 <body>
+<header>
+    {% if request.user.is_authenticated %}
+        Hi {{ request.user.first_name }} <a href="{% url "company:logout" %}">Logout</a>
+    {% else %}
+        <a href="{% url "company:login" %}">Login</a>
+    {% endif %}
+    <br>
     {% block content %}
     {% endblock %}
+</header>
 </body>
 </html>
