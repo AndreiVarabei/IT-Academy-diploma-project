@@ -111,6 +111,22 @@ def good_companies(request):
                   'companies/good_companies.html',
                   {'good_companies':good_companies})
 
+def bad_companies(request):
+    models.BadCompanies.objects.all().delete()
+    bad_companies = models.BadCompanies.objects.all()
+    companies = models.Companies.objects.all()
+    for company in companies:
+        if company.price_to_earn == '—' or float(company.price_to_earn) >= 80:
+                update_bad_companies = models.BadCompanies()
+                update_bad_companies.name = company.name
+                update_bad_companies.slug = company.slug
+                update_bad_companies.ticker = company.ticker
+                update_bad_companies.price = company.price
+                update_bad_companies.price_to_earn = company.price_to_earn
+                update_bad_companies.save()
+    return render(request,
+                  'companies/bad_companies.html',
+                  {'bad_companies':bad_companies})
 
 
 
