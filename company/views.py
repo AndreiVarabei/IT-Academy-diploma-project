@@ -35,6 +35,7 @@ def create_sqlite():
         create_company.save(force_insert=True)
 
 def update_companies(request):
+    models.Companies.objects.all().delete()
     companies = models.Companies.objects.all()
     req = requests.get('https://ru.tradingview.com/symbols/DJ-DJA/components/')
     soup = BeautifulSoup(req.text, 'lxml')
@@ -52,7 +53,7 @@ def update_companies(request):
         else:
             update_company.change = elem.find(class_='negative-8NftriCY').text
         update_company.price_to_earn = all_numbers[6].text
-        update_company.save(force_update=True)
+        update_company.save()
 
 
     return render(request,
@@ -92,6 +93,23 @@ def view_profile(request):
     return render(request,
                   'profile.html')
 
+def good_companies(request):
+    models.GoodCompanies.objects.all().delete()
+    good_companies = models.GoodCompanies.objects.all()
+    companies = models.Companies.objects.all()
+    for company in companies:
+        if company.price_to_earn != '—':
+            if float(company.price_to_earn) <= 20:
+                update_good_companies = models.GoodCompanies()
+                update_good_companies.name = company.name
+                update_good_companies.slug = company.slug
+                update_good_companies.ticker = company.ticker
+                update_good_companies.price = company.price
+                update_good_companies.price_to_earn = company.price_to_earn
+                update_good_companies.save()
+    return render(request,
+                  'companies/good_companies.html',
+                  {'good_companies':good_companies})
 
 
 

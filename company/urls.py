@@ -37,4 +37,6 @@ urlpatterns = [
         name="password_reset_complete",
     ),
     path("profile/", views.view_profile, name="profile"),
+    path("good", views.good_companies, name="good_componies"),
+
 ]

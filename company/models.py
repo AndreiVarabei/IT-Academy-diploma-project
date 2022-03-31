@@ -5,7 +5,7 @@ from django.conf import settings
 # Create your models here.
 
 class Companies(models.Model):
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
 
     ticker = models.CharField(max_length=10)
@@ -20,4 +20,18 @@ class Companies(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    tikers = models.ManyToManyField(Companies, related_name='user_campany')
+
+
+class GoodCompanies(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200)
+
+    ticker = models.CharField(max_length=10)
+    price = models.CharField(max_length=10)
+    change = models.CharField(max_length=50)
+    price_to_earn = models.CharField(max_length=50,default='10')
+
+    time = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.name

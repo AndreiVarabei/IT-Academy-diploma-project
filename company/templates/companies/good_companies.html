@@ -1,13 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %} All companies {% endblock %}
+{% block title %} Good companies to buy {% endblock %} <br>
 
 {% block content %}
-    <h1>All companies: </h1>
-    <a href="{% url "company:update_companies" %}">Update</a> <br>
-    <a href="{% url "company:good_componies" %}"> Best p/e ratios</a>
-
-    {% for company in companies %}
+    <a href="{% url "company:all_companies" %}">Back to all companies</a>
+    <h1> Good companies to buy:  </h1>
+    {% for company in good_companies %}
 
         <h3> {{ company.name }} </h3>
         <p>
@@ -17,6 +15,5 @@
             P/E: {{ company.price_to_earn }}
             Last update: {{ company.time }}
         </p>
-
     {% endfor %}
 {% endblock %}
