@@ -7,7 +7,8 @@
 <body>
 <header>
     {% if request.user.is_authenticated %}
-        Hi {{ request.user.first_name }} <a href="{% url "company:logout" %}">Logout</a>
+        Hi {{ request.user.first_name }} <a href="{% url "company:logout" %}">Logout</a> <br>
+        <a href="{% url "company:profile" %}">Profile</a>
     {% else %}
         <a href="{% url "company:login" %}">Login</a>
     {% endif %}

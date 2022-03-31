@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 # Create your models here.
 
@@ -16,3 +17,7 @@ class Companies(models.Model):
 
     def __str__(self):
         return self.name
+
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    tikers = models.ManyToManyField(Companies, related_name='user_campany')
