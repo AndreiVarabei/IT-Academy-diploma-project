@@ -39,5 +39,6 @@ urlpatterns = [
     path("profile/", views.view_profile, name="profile"),
     path("good", views.good_companies, name="good_componies"),
     path("bad", views.bad_companies, name="bad_componies"),
+    path("register/", views.register, name="register"),
 
 ]

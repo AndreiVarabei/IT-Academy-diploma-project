@@ -13,27 +13,6 @@ from bs4 import BeautifulSoup
 import requests
 
 
-
-
-def create_sqlite():
-    req = requests.get('https://ru.tradingview.com/symbols/DJ-DJA/components/').text
-    soup = BeautifulSoup(req.text, 'lxml')
-    all_campanies = soup.find('tbody')
-    all_tr = all_campanies.find_all('tr',class_='row-arjDAkRm listRow')
-    for elem in all_tr:
-        create_company = models.Companies()
-        create_company.name = elem.find(class_='apply-common-tooltip tickerDescription-CFtXRc_g').text
-        create_company.slug = elem.find(class_='apply-common-tooltip tickerName-CFtXRc_g').text
-        create_company.ticker = elem.find(class_='apply-common-tooltip tickerName-CFtXRc_g').text
-        all_numbers = elem.find_all(class_='cell-1qVmMYEJ right-1qVmMYEJ')
-        create_company.price = all_numbers[0].text
-        if elem.find(class_='positive-14jS0rUP'):
-            create_company.change = elem.find(class_='positive-14jS0rUP').text
-        else:
-            create_company.change = elem.find(class_='negative-14jS0rUP').text
-        create_company.price_to_earn = all_numbers[6].text
-        create_company.save(force_insert=True)
-
 def update_companies(request):
     models.Companies.objects.all().delete()
     companies = models.Companies.objects.all()
@@ -64,34 +43,17 @@ def update_companies(request):
 
 def all_companies(request):
     companies = models.Companies.objects.all()
+
+
     return render(request,
                   'companies/all_companies.html',
                   {'companies':companies})
 
-def custom_login(request):
-    if request.method == 'POST':
-        form = forms.LoginForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(
-                username=cd['username'],
-                password=cd['password'],
-            )
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponse('user was logged in')
-                else:
-                    return HttpResponse('user account is not activated')
-            else:
-                return HttpResponse('Incorrect User/Password')
-    else:
-        form = forms.LoginForm()
-        return render(request, 'login.html', {'form': form})
 
 def view_profile(request):
     return render(request,
                   'profile.html')
+
 
 def good_companies(request):
     models.GoodCompanies.objects.all().delete()
@@ -111,6 +73,7 @@ def good_companies(request):
                   'companies/good_companies.html',
                   {'good_companies':good_companies})
 
+
 def bad_companies(request):
     models.BadCompanies.objects.all().delete()
     bad_companies = models.BadCompanies.objects.all()
@@ -129,6 +92,21 @@ def bad_companies(request):
                   {'bad_companies':bad_companies})
 
 
+def register(request):
+    if request.method == "POST":
+        user_form = forms.RegistrationForm(request.POST)
+        if user_form.is_valid():
+            new_user = user_form.save(commit=False)
+            new_user.set_password(user_form.cleaned_data['password'])
+            new_user.save()
+            models.Profile.objects.create(user=new_user)
+            return render(request, 'registration/registration_complete.html',
+                          {'new_user': new_user})
+        else:
+            return render(request, 'registration/bad_credentials.html')
+    else:
+        user_form = forms.RegistrationForm(request.POST)
+        return render(request, 'registration/register_user.html', {"form": user_form})
 
 
 
