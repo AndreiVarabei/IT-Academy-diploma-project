@@ -3,6 +3,7 @@
 {% block title %}User login{% endblock %}
 
 {% block content %}
+    <a href="{% url "company:all_companies" %}">Back to all companies</a>
     <h2>user login:</h2>
     {% if form.errors %}
         <p>

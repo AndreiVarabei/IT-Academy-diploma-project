@@ -27,10 +27,10 @@ def update_companies(request):
         update_company.ticker = elem.find(class_='apply-common-tooltip tickerName-qN79lDF8').text
         all_numbers = elem.find_all(class_='cell-v9oaRE4W right-v9oaRE4W')
         update_company.price = all_numbers[0].text
-        if elem.find(class_='positive-8NftriCY'):
-            update_company.change = elem.find(class_='positive-8NftriCY').text
+        if elem.find(class_='positive-QbTXS8yz'):
+            update_company.change = elem.find(class_='positive-QbTXS8yz').text
         else:
-            update_company.change = elem.find(class_='negative-8NftriCY').text
+            update_company.change = elem.find(class_='negative-QbTXS8yz').text
         update_company.price_to_earn = all_numbers[6].text
         update_company.save()
 
